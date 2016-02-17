@@ -127,12 +127,6 @@ public class MainActivity extends AppCompatActivity {
         Crop.of(source, destination).asSquare().start(this);
     }
 
-    private void beginCrop(Uri source) {
-        Log.d("beginCrop", "beginCrop");
-        Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
-        Crop.of(source, destination).asSquare().start(this);
-    }
-
 
     private void handleCrop(int resultCode, Intent result) {
         if (resultCode == RESULT_OK) {
