@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">選擇圖片</string>
+
+    <string name="action_settings">設定</string>
+
+    <string name="select_mode">選擇模式</string>
+    <string name="mode_single">單選</string>
+    <string name="mode_multi">多選</string>
+    <string name="max_select_amount">最大選擇數量</string>
+    <string name="hint_default_amount">默認數量為9</string>
+    <string name="enable_camera">是否啟用相機</string>
+    <string name="enable">是</string>
+    <string name="disable">否</string>
+    <string name="go_select">圖片選擇</string>
+
+</resources>
