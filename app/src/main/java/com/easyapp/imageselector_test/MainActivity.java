@@ -1,7 +1,6 @@
 package com.easyapp.imageselector_test;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -13,12 +12,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.easyapp.imageselector.MultiImageSelectorActivity;
-import com.easyapp.imageselector.crop.Crop;
 
-import java.io.File;
 import java.util.ArrayList;
 
 
@@ -55,11 +51,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        View button = findViewById(R.id.button);
+        assert button != null;
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                int selectedMode = MultiImageSelectorActivity.MODE_MULTI;
+                int selectedMode;
 
                 if (mChoiceMode.getCheckedRadioButtonId() == R.id.single) {
                     selectedMode = MultiImageSelectorActivity.MODE_SINGLE;
@@ -90,13 +88,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-/*        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, GestureImageActivity.class);
-                startActivity(intent);
-            }
-        });*/
+//        Button button_crop = (Button) findViewById(R.id.button_crop);
+//        button_crop.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
     }
 
     @Override
@@ -113,27 +111,17 @@ public class MainActivity extends AppCompatActivity {
                     sb.append("\n");
                 }
                 mResultText.setText(sb.toString());
-
-
             }
-        } else if (requestCode == Crop.REQUEST_CROP) {
-            handleCrop(resultCode, data);
         }
     }
 
-    private void beginCrop(String source) {
-        Log.d("beginCrop", "beginCrop");
-        Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
-        Crop.of(source, destination).asSquare().start(this);
-    }
-
-
-    private void handleCrop(int resultCode, Intent result) {
-        if (resultCode == RESULT_OK) {
-            iv_resource.setImageURI(Crop.getOutput(result));
-        } else if (resultCode == Crop.RESULT_ERROR) {
-            Toast.makeText(this, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
-        }
+    private void beginCrop(String path) {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("path", path);
+        intent.putExtras(bundle);
+        intent.setClass(this, CropActivity.class);
+        startActivity(intent);
     }
 
     @Override

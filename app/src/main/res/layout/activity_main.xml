@@ -91,6 +91,12 @@
         android:layout_height="wrap_content"
         android:text="@string/go_select" />
 
+    <Button
+        android:id="@+id/button_crop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/go_crop" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

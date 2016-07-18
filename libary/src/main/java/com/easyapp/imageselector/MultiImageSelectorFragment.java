@@ -43,7 +43,7 @@ import java.util.List;
 
 
 /**
- * 图片选择Fragment
+ * Fragment
  * Created by Nereo on 2015/4/7.
  */
 public class MultiImageSelectorFragment extends Fragment {

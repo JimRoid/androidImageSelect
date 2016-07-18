@@ -25,7 +25,10 @@
         <activity
             android:name="com.easyapp.imageselector.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name="com.easyapp.imageselector.crop.CropImageActivity" />
+        <activity
+            android:name=".CropActivity"
+            android:theme="@style/FullScreen" />
+        <activity android:name="com.easyapp.imageselector.CropResultActivity" />
     </application>
 
 </manifest>
