@@ -41,10 +41,7 @@ public final class CropResultActivity extends Activity {
             imageView.setBackgroundResource(R.drawable.backdrop);
             imageView.setImageBitmap(mImage);
             double ratio = ((int) (10 * mImage.getWidth() / (double) mImage.getHeight())) / 10d;
-            int byteCount = 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB_MR1) {
-                byteCount = mImage.getByteCount() / 1024;
-            }
+            int byteCount = mImage.getByteCount() / 1024;
             String desc = "(" + mImage.getWidth() + ", " + mImage.getHeight() + "), Ratio: " + ratio + ", Bytes: " + byteCount + "K";
             ((TextView) findViewById(R.id.resultImageText)).setText(desc);
         } else {

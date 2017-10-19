@@ -10,10 +10,10 @@ import android.widget.Button;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * 多圖選擇
- *
  */
 public class MultiImageSelectorActivity extends FragmentActivity implements MultiImageSelectorFragment.Callback {
 
@@ -22,28 +22,29 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
      */
     public static final String EXTRA_SELECT_COUNT = "max_select_count";
     /**
-     * 图片选择模式，默认多选
+     * 圖片選擇模式，默認多選
      */
     public static final String EXTRA_SELECT_MODE = "select_count_mode";
     /**
-     * 是否显示相机，默认显示
+     * 是否顯示相機，默認顯示
      */
     public static final String EXTRA_SHOW_CAMERA = "show_camera";
     /**
-     * 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合
+     * 選擇結果，返回array list
      */
     public static final String EXTRA_RESULT = "select_result";
     /**
-     * 默认选择集
+     * 默認選擇array list
      */
     public static final String EXTRA_DEFAULT_SELECTED_LIST = "default_list";
 
     /**
-     * 单选
+     * 單選
      */
     public static final int MODE_SINGLE = 0;
+
     /**
-     * 多选
+     * 多選
      */
     public static final int MODE_MULTI = 1;
 
@@ -74,7 +75,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
                 .add(R.id.image_grid, Fragment.instantiate(this, MultiImageSelectorFragment.class.getName(), bundle))
                 .commit();
 
-        // 返回按钮
+        // 返回按鈕
         findViewById(R.id.btn_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,7 +97,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
             @Override
             public void onClick(View view) {
                 if (resultList != null && resultList.size() > 0) {
-                    // 返回已选择的图片数据
+                    // 回傳已經選擇的圖片
                     Intent data = new Intent();
                     data.putStringArrayListExtra(EXTRA_RESULT, resultList);
                     setResult(RESULT_OK, data);
@@ -107,8 +108,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
     }
 
     private void updateDoneText() {
-        mSubmitButton.setText(String.format("%s(%d/%d)",
-                getString(R.string.action_done), resultList.size(), mDefaultCount));
+        mSubmitButton.setText(String.format(Locale.TAIWAN, "%s(%d/%d)", getString(R.string.action_done), resultList.size(), mDefaultCount));
     }
 
     @Override
@@ -125,7 +125,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
         if (!resultList.contains(path)) {
             resultList.add(path);
         }
-        // 有图片之后，改变按钮状态
+
         if (resultList.size() > 0) {
             updateDoneText();
             if (!mSubmitButton.isEnabled()) {
@@ -140,7 +140,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
             resultList.remove(path);
         }
         updateDoneText();
-        // 当为选择图片时候的状态
+
         if (resultList.size() == 0) {
             mSubmitButton.setText(R.string.action_done);
             mSubmitButton.setEnabled(false);

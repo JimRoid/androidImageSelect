@@ -43,8 +43,7 @@ import java.util.List;
 
 
 /**
- * Fragment
- * Created by Nereo on 2015/4/7.
+ * 選擇圖片畫面的頁面
  */
 public class MultiImageSelectorFragment extends Fragment {
 
@@ -53,42 +52,41 @@ public class MultiImageSelectorFragment extends Fragment {
     private static final String KEY_TEMP_FILE = "key_temp_file";
 
     /**
-     * 最大图片选择次数，int类型
+     * 圖片最大數量
      */
     public static final String EXTRA_SELECT_COUNT = "max_select_count";
     /**
-     * 图片选择模式，int类型
+     * 圖片選擇模式
      */
     public static final String EXTRA_SELECT_MODE = "select_count_mode";
     /**
-     * 是否显示相机，boolean类型
+     * 是否顯示相機
      */
     public static final String EXTRA_SHOW_CAMERA = "show_camera";
     /**
-     * 默认选择的数据集
+     * 帶入選擇的array-list
      */
     public static final String EXTRA_DEFAULT_SELECTED_LIST = "default_result";
     /**
-     * 单选
+     * 單選
      */
     public static final int MODE_SINGLE = 0;
     /**
-     * 多选
+     * 多選
      */
     public static final int MODE_MULTI = 1;
-    // 不同loader定义
+
     private static final int LOADER_ALL = 0;
     private static final int LOADER_CATEGORY = 1;
-    // 请求加载系统照相机
+
     private static final int REQUEST_CAMERA = 100;
 
 
-    // 结果数据
+    // 圖片data
     private ArrayList<String> resultList = new ArrayList<>();
-    // 文件夹数据
+    // 資料夾data
     private ArrayList<Folder> mResultFolder = new ArrayList<>();
-
-    // 图片Grid
+    //顯示圖片grid
     private GridView mGridView;
     private Callback mCallback;
 
@@ -97,11 +95,9 @@ public class MultiImageSelectorFragment extends Fragment {
 
     private ListPopupWindow mFolderPopupWindow;
 
-    // 类别
+
     private TextView mCategoryText;
-    // 预览按钮
     private Button mPreviewBtn;
-    // 底部View
     private View mPopupAnchorView;
 
     private int mDesireImageCount;
@@ -130,13 +126,13 @@ public class MultiImageSelectorFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 选择图片数量
+        // 選擇圖片數量
         mDesireImageCount = getArguments().getInt(EXTRA_SELECT_COUNT);
 
-        // 图片选择模式
+        // 圖片選擇mode
         final int mode = getArguments().getInt(EXTRA_SELECT_MODE);
 
-        // 默认选择
+        // 默認選擇
         if (mode == MODE_MULTI) {
             ArrayList<String> tmp = getArguments().getStringArrayList(EXTRA_DEFAULT_SELECTED_LIST);
             if (tmp != null && tmp.size() > 0) {
@@ -144,16 +140,16 @@ public class MultiImageSelectorFragment extends Fragment {
             }
         }
 
-        // 是否显示照相机
+        // 是否顯示照相機
         mIsShowCamera = getArguments().getBoolean(EXTRA_SHOW_CAMERA, true);
         mImageAdapter = new ImageGridAdapter(getActivity(), mIsShowCamera, 3);
-        // 是否显示选择指示器
+        // 是否顯示選擇指示
         mImageAdapter.showSelectIndicator(mode == MODE_MULTI);
 
         mPopupAnchorView = view.findViewById(R.id.footer);
 
         mCategoryText = (TextView) view.findViewById(R.id.category_btn);
-        // 初始化，加载所有图片
+        // 初始化，加載所有圖片
         mCategoryText.setText(R.string.folder_all);
         mCategoryText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +171,7 @@ public class MultiImageSelectorFragment extends Fragment {
         });
 
         mPreviewBtn = (Button) view.findViewById(R.id.preview);
-        // 初始化，按钮状态初始化
+        // 初始化，按鈕狀態初始化
         if (resultList == null || resultList.size() <= 0) {
             mPreviewBtn.setText(R.string.preview);
             mPreviewBtn.setEnabled(false);
@@ -193,7 +189,7 @@ public class MultiImageSelectorFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (mImageAdapter.isShowCamera()) {
-                    // 如果显示照相机，则第一个Grid显示为照相机，处理特殊逻辑
+                    // 如果顯示照相機，則第一個grid顯示為照相機，處理特殊邏輯
                     if (i == 0) {
                         showCameraAction();
                     } else {
@@ -269,7 +265,7 @@ public class MultiImageSelectorFragment extends Fragment {
                             if (null != folder) {
                                 mImageAdapter.setData(folder.images);
                                 mCategoryText.setText(folder.name);
-                                // 设定默认选择
+                                // 設定默認選擇
                                 if (resultList != null && resultList.size() > 0) {
                                     mImageAdapter.setDefaultSelected(resultList);
                                 }
@@ -277,7 +273,7 @@ public class MultiImageSelectorFragment extends Fragment {
                             mImageAdapter.setShowCamera(false);
                         }
 
-                        // 滑动到最初始位置
+                        // 滑動到最初始的位置
                         mGridView.smoothScrollToPosition(0);
                     }
                 }, 100);
@@ -303,7 +299,7 @@ public class MultiImageSelectorFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // 首次加载所有图片
+        // 首次載入所有圖片
         //new LoadImageTask().execute();
         getActivity().getSupportLoaderManager().initLoader(LOADER_ALL, null, mLoaderCallback);
     }
@@ -311,7 +307,7 @@ public class MultiImageSelectorFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // 相机拍照完成后，返回图片路径
+        // 相機拍照完成後回傳圖片路徑
         if (requestCode == REQUEST_CAMERA) {
             if (resultCode == Activity.RESULT_OK) {
                 if (mTmpFile != null) {
@@ -341,14 +337,14 @@ public class MultiImageSelectorFragment extends Fragment {
     }
 
     /**
-     * 选择相机
+     * 選擇相機
      */
     private void showCameraAction() {
-        // 跳转到系统照相机
+        // 開啟系統相機
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            // 设置系统相机拍照后的输出路径
-            // 创建临时文件
+            // 設定相機儲存路徑
+            // 建立file
             try {
                 mTmpFile = FileUtils.createTmpFile(getActivity());
             } catch (IOException e) {
@@ -366,13 +362,12 @@ public class MultiImageSelectorFragment extends Fragment {
     }
 
     /**
-     * 选择图片操作
+     * 選擇圖片操作
      *
      * @param image
      */
     private void selectImageFromGrid(Image image, int mode) {
         if (image != null) {
-            // 多选模式
             if (mode == MODE_MULTI) {
                 if (resultList.contains(image.path)) {
                     resultList.remove(image.path);
@@ -387,7 +382,6 @@ public class MultiImageSelectorFragment extends Fragment {
                         mCallback.onImageUnselected(image.path);
                     }
                 } else {
-                    // 判断选择数量问题
                     if (mDesireImageCount == resultList.size()) {
                         Toast.makeText(getActivity(), R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
                         return;
@@ -402,7 +396,6 @@ public class MultiImageSelectorFragment extends Fragment {
                 }
                 mImageAdapter.select(image);
             } else if (mode == MODE_SINGLE) {
-                // 单选模式
                 if (mCallback != null) {
                     mCallback.onSingleImageSelected(image.path);
                 }
@@ -462,7 +455,7 @@ public class MultiImageSelectorFragment extends Fragment {
                             images.add(image);
                         }
                         if (!hasFolderGened) {
-                            // 获取文件夹名称
+                            // 取得文件名稱
                             File folderFile = new File(path).getParentFile();
                             if (folderFile != null && folderFile.exists()) {
                                 String fp = folderFile.getAbsolutePath();
@@ -485,7 +478,6 @@ public class MultiImageSelectorFragment extends Fragment {
                     } while (data.moveToNext());
 
                     mImageAdapter.setData(images);
-                    // 设定默认选择
                     if (resultList != null && resultList.size() > 0) {
                         mImageAdapter.setDefaultSelected(resultList);
                     }
@@ -517,7 +509,7 @@ public class MultiImageSelectorFragment extends Fragment {
     }
 
     /**
-     * 回傳街口
+     * callback
      */
     public interface Callback {
         void onSingleImageSelected(String path);

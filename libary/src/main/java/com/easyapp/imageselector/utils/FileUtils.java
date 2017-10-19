@@ -11,17 +11,16 @@ import java.io.IOException;
 import static android.os.Environment.MEDIA_MOUNTED;
 
 /**
- * 文件操作类
- * Created by Nereo on 2015/4/8.
+ * 文件操作累
  */
 public class FileUtils {
 
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
 
-    public static File createTmpFile(Context context) throws IOException{
+    public static File createTmpFile(Context context) throws IOException {
         File dir = null;
-        if(TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+        if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
             dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
             if (!dir.exists()) {
                 dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/Camera");
@@ -29,7 +28,7 @@ public class FileUtils {
                     dir = getCacheDirectory(context, true);
                 }
             }
-        }else{
+        } else {
             dir = getCacheDirectory(context, true);
         }
         return File.createTempFile(JPEG_FILE_PREFIX, JPEG_FILE_SUFFIX, dir);
@@ -80,7 +79,9 @@ public class FileUtils {
             appCacheDir = context.getCacheDir();
         }
         if (appCacheDir == null) {
-            String cacheDirPath = "/data/data/" + context.getPackageName() + "/cache/";
+
+//            String cacheDirPath = "/data/data/" + context.getPackageName() + "/cache/";
+            String cacheDirPath = context.getFilesDir().getPath() + context.getPackageName() + "/cache/";
             appCacheDir = new File(cacheDirPath);
         }
         return appCacheDir;
@@ -91,7 +92,7 @@ public class FileUtils {
      * created on SD card <i>("/Android/data/[app_package_name]/cache/uil-images")</i> if card is mounted and app has
      * appropriate permission. Else - Android defines cache directory on device's file system.
      *
-     * @param context Application context
+     * @param context  Application context
      * @param cacheDir Cache directory path (e.g.: "AppCacheDir", "AppDir/cache/images")
      * @return Cache {@link File directory}
      */

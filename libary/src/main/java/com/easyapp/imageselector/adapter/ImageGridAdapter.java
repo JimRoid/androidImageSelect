@@ -2,7 +2,6 @@ package com.easyapp.imageselector.adapter;
 
 import android.content.Context;
 import android.graphics.Point;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +19,7 @@ import java.util.List;
 
 
 /**
- * 图片Adapter
- * Created by Nereo on 2015/4/7.
- * Updated by nereo on 2016/1/19.
+ * 圖片 adapter
  */
 public class ImageGridAdapter extends BaseAdapter {
 
@@ -38,26 +35,21 @@ public class ImageGridAdapter extends BaseAdapter {
     private List<Image> mImages = new ArrayList<>();
     private List<Image> mSelectedImages = new ArrayList<>();
 
-    final int mGridWidth;
+    private final int mGridWidth;
 
     public ImageGridAdapter(Context context, boolean showCamera, int column) {
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.showCamera = showCamera;
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        int width = 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            Point size = new Point();
-            wm.getDefaultDisplay().getSize(size);
-            width = size.x;
-        } else {
-            width = wm.getDefaultDisplay().getWidth();
-        }
+        Point size = new Point();
+        wm.getDefaultDisplay().getSize(size);
+        int width = size.x;
         mGridWidth = width / column;
     }
 
     /**
-     * 显示选择指示器
+     * 選擇指示器
      *
      * @param b
      */
@@ -77,7 +69,7 @@ public class ImageGridAdapter extends BaseAdapter {
     }
 
     /**
-     * 选择某个图片，改变选择状态
+     * 選擇某個圖片，改變選擇狀態
      *
      * @param image
      */
@@ -91,7 +83,7 @@ public class ImageGridAdapter extends BaseAdapter {
     }
 
     /**
-     * 通过图片路径设置默认选择
+     * 通過圖片路徑改變默認選擇狀態
      *
      * @param resultList
      */
@@ -119,8 +111,6 @@ public class ImageGridAdapter extends BaseAdapter {
     }
 
     /**
-     * 设置数据集
-     *
      * @param images
      */
     public void setData(List<Image> images) {
@@ -208,15 +198,15 @@ public class ImageGridAdapter extends BaseAdapter {
 
         void bindData(final Image data) {
             if (data == null) return;
-            // 处理单选和多选状态
+            // 處理單選和多選狀態
             if (showSelectIndicator) {
                 indicator.setVisibility(View.VISIBLE);
                 if (mSelectedImages.contains(data)) {
-                    // 设置选中状态
+                    // 設定選擇狀態
                     indicator.setImageResource(R.drawable.btn_selected);
                     mask.setVisibility(View.VISIBLE);
                 } else {
-                    // 未选择
+                    //  未選擇
                     indicator.setImageResource(R.drawable.btn_unselected);
                     mask.setVisibility(View.GONE);
                 }
@@ -225,7 +215,7 @@ public class ImageGridAdapter extends BaseAdapter {
             }
             File imageFile = new File(data.path);
             if (imageFile.exists()) {
-                // 显示图片
+                // 顯示圖片
                 Glide.with(mContext)
                         .load(imageFile)
                         .placeholder(R.drawable.default_error)
