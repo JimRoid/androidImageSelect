@@ -4,6 +4,8 @@
 
     <application>
         <activity android:name=".CropImageActivity"></activity>
+
+
     </application>
 
 </manifest>
