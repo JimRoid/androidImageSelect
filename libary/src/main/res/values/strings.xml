@@ -16,4 +16,8 @@
     <string name="crop__done">DONE</string>
     <string name="crop__cancel" tools:ignore="ButtonCase">CANCEL</string>
 
+
+    <!--config FileProvider authorities-->
+    <string name="authorities">com.easyapp.imageselector.fileProvider</string>
+
 </resources>
