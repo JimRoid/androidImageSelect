@@ -357,7 +357,9 @@ public class MultiImageSelectorFragment extends Fragment {
 //                        getContext().getPackageName() + ".provider",
 //                        mTmpFile);
 //                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                Uri photoURI = FileProvider.getUriForFile(getContext(), getString(R.string.authorities), mTmpFile);
+//                Log.d("tag", getContext().getPackageName());
+                String authority = getContext().getPackageName() + ".fileProvider";
+                Uri photoURI = FileProvider.getUriForFile(getContext(), authority, mTmpFile);
                 if (photoURI != null) {
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 }

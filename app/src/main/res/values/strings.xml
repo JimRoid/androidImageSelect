@@ -13,7 +13,4 @@
     <string name="disable">Disable</string>
     <string name="go_select">Select</string>
     <string name="go_crop">CropSquare</string>
-
-    <string name="authorities" translatable="false">com.easyapp.imageselector_test.fileProvider</string>
-
 </resources>

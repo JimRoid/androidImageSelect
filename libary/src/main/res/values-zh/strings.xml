@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="authorities">com.easyapp.imageselector.fileProvider</string>
+
     <string name="folder_all">所有照片</string>
     <string name="preview">預覽</string>
     <string name="msg_no_camera">沒有系統相機</string>
@@ -16,4 +16,5 @@
 
     <string name="crop__done">完成</string>
     <string name="crop__cancel" tools:ignore="ButtonCase">關閉</string>
+
 </resources>
