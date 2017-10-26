@@ -13,6 +13,10 @@ public abstract class CropImageActivity extends AppCompatActivity {
 
     private CropMainFragment mCurrentFragment;
 
+    public CropImageActivity() {
+        super();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

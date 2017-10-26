@@ -352,11 +352,15 @@ public class MultiImageSelectorFragment extends Fragment {
                 e.printStackTrace();
             }
             if (mTmpFile != null && mTmpFile.exists()) {
-                Uri photoUri = FileProvider.getUriForFile(
-                        getContext(),
-                        getContext().getPackageName() + ".provider",
-                        mTmpFile);
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+//                Uri photoUri = FileProvider.getUriForFile(
+//                        getContext(),
+//                        getContext().getPackageName() + ".provider",
+//                        mTmpFile);
+//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                Uri photoURI = FileProvider.getUriForFile(getContext(), "com.easyapp.imageselector.fileProvider", mTmpFile);
+                if (photoURI != null) {
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                }
 //                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTmpFile));
                 startActivityForResult(cameraIntent, REQUEST_CAMERA);
             } else {

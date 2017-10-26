@@ -1,5 +1,6 @@
 package com.easyapp.imageselector_test;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,9 +17,12 @@ import android.widget.TextView;
 import com.easyapp.imageselector.MultiImageSelectorActivity;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     private static final int REQUEST_IMAGE = 2;
 
@@ -83,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
                 if (mSelectPath != null && mSelectPath.size() > 0) {
                     intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
                 }
+
+                Log.d("tag", "QQ");
+
                 startActivityForResult(intent, REQUEST_IMAGE);
 
             }
@@ -95,6 +102,33 @@ public class MainActivity extends AppCompatActivity {
 //
 //            }
 //        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requiresPermissions();
+    }
+
+    private void requiresPermissions() {
+        if (EasyPermissions.hasPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})) {
+
+        } else {
+            EasyPermissions.requestPermissions(this,
+                    "未允許「" + getString(R.string.app_name) + "」權限，將使「" + getString(R.string.app_name) + "」無法正常運作，是否重新設定權限？",
+                    1,
+                    new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE});
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
     }
 
     @Override
