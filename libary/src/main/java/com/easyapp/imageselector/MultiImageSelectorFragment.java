@@ -1,5 +1,6 @@
 package com.easyapp.imageselector;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -42,13 +44,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
 
 /**
  * 選擇圖片畫面的頁面
  */
-public class MultiImageSelectorFragment extends Fragment {
+public class MultiImageSelectorFragment extends Fragment implements EasyPermissions.PermissionCallbacks {
 
-    public static final String TAG = "MultiImageSelectorFragment";
+    /**
+     * permission request code
+     */
+    public static final int CAMERA = 1020;
 
     private static final String KEY_TEMP_FILE = "key_temp_file";
 
@@ -149,7 +158,7 @@ public class MultiImageSelectorFragment extends Fragment {
 
         mPopupAnchorView = view.findViewById(R.id.footer);
 
-        mCategoryText = (TextView) view.findViewById(R.id.category_btn);
+        mCategoryText = view.findViewById(R.id.category_btn);
         // 初始化，加載所有圖片
         mCategoryText.setText(R.string.folder_all);
         mCategoryText.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +180,7 @@ public class MultiImageSelectorFragment extends Fragment {
             }
         });
 
-        mPreviewBtn = (Button) view.findViewById(R.id.preview);
+        mPreviewBtn = view.findViewById(R.id.preview);
         // 初始化，按鈕狀態初始化
         if (resultList == null || resultList.size() <= 0) {
             mPreviewBtn.setText(R.string.preview);
@@ -184,7 +193,7 @@ public class MultiImageSelectorFragment extends Fragment {
             }
         });
 
-        mGridView = (GridView) view.findViewById(R.id.grid);
+        mGridView = view.findViewById(R.id.grid);
         mGridView.setAdapter(mImageAdapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -192,7 +201,9 @@ public class MultiImageSelectorFragment extends Fragment {
                 if (mImageAdapter.isShowCamera()) {
                     // 如果顯示照相機，則第一個grid顯示為照相機，處理特殊邏輯
                     if (i == 0) {
-                        showCameraAction();
+                        checkCameraPermission();
+//                            showCameraAction();
+//
                     } else {
                         // 正常操作
                         Image image = (Image) adapterView.getAdapter().getItem(i);
@@ -335,6 +346,42 @@ public class MultiImageSelectorFragment extends Fragment {
             }
         }
         super.onConfigurationChanged(newConfig);
+    }
+
+    @AfterPermissionGranted(CAMERA)
+    private void checkCameraPermission() {
+        String[] params = {Manifest.permission.CAMERA};
+        if (EasyPermissions.hasPermissions(getContext(), params)) {
+            showCameraAction();
+        } else {
+            EasyPermissions.requestPermissions(this, "該應用需要相機權限", CAMERA, params);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        String[] params = {Manifest.permission.CAMERA};
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this)
+                    .setRationale("没有該權限，此應用無法正常工作。打開應用設置界面以修改權限")
+                    .setTitle("必須權限")
+                    .build()
+                    .show();
+        } else if (!EasyPermissions.hasPermissions(getContext(), params)) {
+
+        }
     }
 
     /**

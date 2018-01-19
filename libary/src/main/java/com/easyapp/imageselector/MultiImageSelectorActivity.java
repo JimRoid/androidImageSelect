@@ -1,21 +1,35 @@
 package com.easyapp.imageselector;
 
+import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * 多圖選擇
  */
-public class MultiImageSelectorActivity extends FragmentActivity implements MultiImageSelectorFragment.Callback {
+public class MultiImageSelectorActivity extends FragmentActivity implements MultiImageSelectorFragment.Callback, EasyPermissions.PermissionCallbacks {
+
+    /**
+     * permission request code
+     */
+    public static final int WRITE_EXTERNAL_STORAGE = 1010;
 
     /**
      * 最大圖片選擇，int，default 9
@@ -51,6 +65,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
     private ArrayList<String> resultList = new ArrayList<>();
     private Button mSubmitButton;
     private int mDefaultCount;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +80,11 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
             resultList = intent.getStringArrayListExtra(EXTRA_DEFAULT_SELECTED_LIST);
         }
 
-        Bundle bundle = new Bundle();
+        bundle = new Bundle();
         bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_COUNT, mDefaultCount);
         bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_MODE, mode);
         bundle.putBoolean(MultiImageSelectorFragment.EXTRA_SHOW_CAMERA, isShow);
         bundle.putStringArrayList(MultiImageSelectorFragment.EXTRA_DEFAULT_SELECTED_LIST, resultList);
-
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.image_grid, Fragment.instantiate(this, MultiImageSelectorFragment.class.getName(), bundle))
-                .commit();
 
         // 返回按鈕
         findViewById(R.id.btn_back).setOnClickListener(new View.OnClickListener() {
@@ -85,7 +96,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
         });
 
         // 完成按钮
-        mSubmitButton = (Button) findViewById(R.id.commit);
+        mSubmitButton = findViewById(R.id.commit);
         if (resultList == null || resultList.size() <= 0) {
             mSubmitButton.setText(R.string.action_done);
             mSubmitButton.setEnabled(false);
@@ -105,6 +116,45 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
                 }
             }
         });
+
+        checkWritePermission();
+    }
+
+    @AfterPermissionGranted(WRITE_EXTERNAL_STORAGE)
+    private void checkWritePermission() {
+        String[] params = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, params)) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.image_grid, Fragment.instantiate(this, MultiImageSelectorFragment.class.getName(), bundle))
+                    .commit();
+        } else {
+            EasyPermissions.requestPermissions(this, "該應用需要讀寫權限", WRITE_EXTERNAL_STORAGE, params);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        String[] params = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this)
+                    .setRationale("没有該權限，此應用無法正常工作。打開應用設置界面以修改權限")
+                    .setTitle("必須權限")
+                    .build()
+                    .show();
+        } else if (!EasyPermissions.hasPermissions(this, params)) {
+            finish();
+        }
     }
 
     private void updateDoneText() {

@@ -22,7 +22,7 @@ import java.util.List;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+public class MainActivity extends AppCompatActivity  {
 
     private static final int REQUEST_IMAGE = 2;
 
@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        iv_resource = (ImageView) findViewById(R.id.iv_resource);
-        mResultText = (TextView) findViewById(R.id.result);
-        mChoiceMode = (RadioGroup) findViewById(R.id.choice_mode);
-        mShowCamera = (RadioGroup) findViewById(R.id.show_camera);
-        mRequestNum = (EditText) findViewById(R.id.request_num);
+        iv_resource = findViewById(R.id.iv_resource);
+        mResultText = findViewById(R.id.result);
+        mChoiceMode = findViewById(R.id.choice_mode);
+        mShowCamera = findViewById(R.id.show_camera);
+        mRequestNum = findViewById(R.id.request_num);
 
         mChoiceMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -87,48 +87,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 if (mSelectPath != null && mSelectPath.size() > 0) {
                     intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
                 }
-
-                Log.d("tag", "QQ");
-
                 startActivityForResult(intent, REQUEST_IMAGE);
-
             }
         });
-
-//        Button button_crop = (Button) findViewById(R.id.button_crop);
-//        button_crop.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        requiresPermissions();
-    }
-
-    private void requiresPermissions() {
-        if (EasyPermissions.hasPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})) {
-
-        } else {
-            EasyPermissions.requestPermissions(this,
-                    "未允許「" + getString(R.string.app_name) + "」權限，將使「" + getString(R.string.app_name) + "」無法正常運作，是否重新設定權限？",
-                    1,
-                    new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE});
-        }
-    }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms) {
-
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-
     }
 
     @Override
